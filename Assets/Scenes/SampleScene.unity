@@ -459,7 +459,7 @@ GameObject:
   - component: {fileID: 1153148273}
   - component: {fileID: 1153148272}
   - component: {fileID: 1153148271}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -571,7 +571,7 @@ GameObject:
   - component: {fileID: 1416250558}
   - component: {fileID: 1416250557}
   - component: {fileID: 1416250556}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -831,9 +831,15 @@ MonoBehaviour:
   cam: {fileID: 330585543}
   rb: {fileID: 2077432964}
   speed: 30
+  airspeed: 3
   maxspeed: 7
   jump_power: 5
-  counterStrength: 25
+  counterStrength: 35
+  groundCheckDistance: 1
+  groundCheckRadius: 0.3
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!114 &2077432970
 MonoBehaviour:
   m_ObjectHideFlags: 0
