@@ -8,6 +8,8 @@ public class PlayerMovement : MonoBehaviour
     public Rigidbody rb;
     public float speed = 50f;
     public float airspeed = 10f;
+    public float crouchspeed = 10f;
+    public float crouchcounter = 15f;
     public float maxspeed = 7f;
     public float jump_power = 5f;
     public float counterStrength = 15f;
@@ -16,6 +18,7 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask groundMask;
     private Vector2 moveInput = Vector2.zero;
     private bool grounded = true;
+    private bool crouching = false;
 
     void Start()
     {
@@ -36,6 +39,20 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    public void OnCrouch(InputAction.CallbackContext c)
+    {
+        if (c.performed)
+        {
+            crouching = true;
+            transform.localScale = new Vector3(transform.localScale.x, 0.5f, transform.localScale.z);
+        }
+        else
+        {
+            crouching = false;
+            transform.localScale = new Vector3(transform.localScale.x, 1.0f, transform.localScale.z);
+        }
+    }
+
     void FixedUpdate()
     {   
         grounded = Physics.SphereCast(
@@ -53,14 +70,20 @@ public class PlayerMovement : MonoBehaviour
         float velocity = (new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z)).magnitude;
 
         //Player Movement
-        if (grounded) {
+        if (grounded && !crouching) {
             rb.AddForce(rotation * move * speed, ForceMode.Acceleration); //Move
             //Counter Movement
             rb.AddForce(Quaternion.AngleAxis(180f, Vector3.up) * (rotation * move) * counterStrength * velocity / maxspeed, ForceMode.Acceleration);
         }
-        else
+        else if(!grounded)
         {
             rb.AddForce(rotation * move * airspeed, ForceMode.Acceleration);
+        }
+        else if (crouching)
+        {
+            rb.AddForce(rotation * move * crouchspeed, ForceMode.Acceleration);
+            //Counter Movement
+            rb.AddForce(Quaternion.AngleAxis(180f, Vector3.up) * (rotation * move) * crouchcounter * velocity / maxspeed, ForceMode.Acceleration);
         }
     }
 }
